@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Image, X, ChevronLeft, ChevronRight, Eye, Loader2 } from 'lucide-react';
 import { cn } from '../utils';
 import { GALLERY_IMAGES, SOCIAL_LINKS } from '../utils';
@@ -134,13 +134,6 @@ interface GalleryItemProps {
 function GalleryItem({ image, index, isVisible, onLoad, onClick }: GalleryItemProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
   const handleLoad = () => {
     setIsLoaded(true);
     onLoad(image.id);
@@ -166,18 +159,15 @@ function GalleryItem({ image, index, isVisible, onLoad, onClick }: GalleryItemPr
         loading={index < 4 ? "eager" : "lazy"}
         onLoad={handleLoad}
         onError={() => setIsLoaded(true)}
-        className={cn('w-full h-full object-cover transition-all duration-500', isLoaded ? 'opacity-100' : 'opacity-0')}
+        className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
       />
-      {!isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-editorial-black-100 z-10 transition-opacity duration-300" aria-hidden="true">
-          <div className="w-8 h-8 border-2 border-champagne-300 border-t-champagne-500 rounded-full animate-spin" aria-hidden="true" />
+      {isLoaded && (
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-editorial-black-950/80 to-transparent">
+          <span className="inline-block px-3 py-1 rounded-full bg-champagne-500/90 text-white text-xs font-medium tracking-widest uppercase backdrop-blur-sm">
+            {image.category}
+          </span>
         </div>
       )}
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-editorial-black-950/80 to-transparent">
-        <span className="inline-block px-3 py-1 rounded-full bg-champagne-500/90 text-white text-xs font-medium tracking-widest uppercase backdrop-blur-sm">
-          {image.category}
-        </span>
-      </div>
     </article>
   );
 }

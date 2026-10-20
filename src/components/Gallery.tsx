@@ -89,7 +89,6 @@ export function Gallery() {
                 key={image.id}
                 image={image}
                 index={index}
-                isVisible={gridVisible}
                 onLoad={handleImageLoad}
                 onClick={openLightbox}
               />
@@ -131,7 +130,7 @@ interface GalleryItemProps {
   onClick: (image: GalleryImage) => void;
 }
 
-function GalleryItem({ image, index, isVisible, onLoad, onClick }: GalleryItemProps) {
+function GalleryItem({ image, index, onLoad, onClick }: GalleryItemProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const handleLoad = () => {
@@ -142,9 +141,9 @@ function GalleryItem({ image, index, isVisible, onLoad, onClick }: GalleryItemPr
   return (
     <article
       className={cn(
-        'image-frame aspect-[4/5] sm:aspect-[3/4] cursor-pointer',
+        'cursor-pointer relative',
         'rounded-2xl overflow-hidden',
-        isVisible ? 'animate-slide-up' : 'opacity-0 translate-y-10'
+        'animate-slide-up'
       )}
       style={{ transitionDelay: `${index * 100}ms` }}
       onClick={() => onClick(image)}
@@ -153,14 +152,16 @@ function GalleryItem({ image, index, isVisible, onLoad, onClick }: GalleryItemPr
       role="listitem"
       aria-label={`${image.category}: ${image.alt}. Clique para ampliar.`}
     >
-      <img
-        src={image.src}
-        alt={image.alt}
-        loading={index < 4 ? "eager" : "lazy"}
-        onLoad={handleLoad}
-        onError={() => setIsLoaded(true)}
-        className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-      />
+      <div className="image-frame">
+        <img
+          src={image.src}
+          alt={image.alt}
+          loading={index < 4 ? "eager" : "lazy"}
+          onLoad={handleLoad}
+          onError={() => setIsLoaded(true)}
+          className="transition-transform duration-700 hover:scale-105"
+        />
+      </div>
       {isLoaded && (
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-editorial-black-950/80 to-transparent">
           <span className="inline-block px-3 py-1 rounded-full bg-champagne-500/90 text-white text-xs font-medium tracking-widest uppercase backdrop-blur-sm">

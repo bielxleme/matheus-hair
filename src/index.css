@@ -241,13 +241,6 @@
 
   .image-frame {
     @apply relative overflow-hidden bg-editorial-black-100;
-    aspect-ratio: 4 / 5;
-  }
-
-  @media (min-width: 640px) {
-    .image-frame {
-      aspect-ratio: 3 / 4;
-    }
   }
 
   .image-frame img {

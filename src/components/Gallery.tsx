@@ -157,6 +157,8 @@ function GalleryItem({ image, index, onLoad, onClick }: GalleryItemProps) {
           src={image.src}
           alt={image.alt}
           loading={index < 4 ? "eager" : "lazy"}
+          decoding="async"
+          fetchpriority={index < 4 ? "high" : "auto"}
           onLoad={handleLoad}
           onError={() => setIsLoaded(true)}
           className="transition-transform duration-700 hover:scale-105"

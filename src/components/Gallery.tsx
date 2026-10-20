@@ -16,7 +16,7 @@ export function Gallery() {
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   const { ref: headingRef, isVisible: headingVisible } = useScrollReveal({ triggerOnce: true });
-  const { ref: gridRef, isVisible: gridVisible } = useScrollReveal({ triggerOnce: true, rootMargin: '0px 0px -100px 0px' });
+  const { ref: gridRef, isVisible: gridVisible } = useScrollReveal({ triggerOnce: true, threshold: 0, rootMargin: '0px 0px -100px 0px' });
 
   const handleImageLoad = useCallback((id: number) => {
     setLoadedImages(prev => new Set(prev).add(id));
@@ -115,6 +115,7 @@ export function Gallery() {
           image={selectedImage}
           onClose={closeLightbox}
           onNavigate={navigate}
+          onSelect={setSelectedImage}
           onKeyDown={handleKeyDown}
         />
       )}
@@ -179,10 +180,11 @@ interface LightboxProps {
   image: GalleryImage;
   onClose: () => void;
   onNavigate: (direction: number) => void;
+  onSelect: (image: GalleryImage) => void;
   onKeyDown: (e: KeyboardEvent) => void;
 }
 
-function Lightbox({ image, onClose, onNavigate, onKeyDown }: LightboxProps) {
+function Lightbox({ image, onClose, onNavigate, onSelect, onKeyDown }: LightboxProps) {
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-editorial-black-950/98 backdrop-blur-sm"
@@ -236,7 +238,7 @@ function Lightbox({ image, onClose, onNavigate, onKeyDown }: LightboxProps) {
         {GALLERY_IMAGES.map((img, index) => (
           <button
             key={img.id}
-            onClick={(e) => { e.stopPropagation(); setSelectedImage(img); }}
+            onClick={(e) => { e.stopPropagation(); onSelect(img); }}
             className={cn(
               'w-3 h-3 rounded-full transition-all duration-300',
               img.id === image.id
